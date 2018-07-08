@@ -62,6 +62,18 @@ function clearRedstone(redstoneProxy)
     end
 end
 
+-- Estimates the number of seconds before all power will be drained.
+function getETA(delta, max)
+    if delta == 0 then
+        return "0 seconds"
+    elseif delta > 0 then
+        return "INF seconds"
+    else
+        local etaSeconds = max / abs(delta)
+        return string.format("%.0f seconds", etaSeconds)
+    end
+end
+
 local container = charts.Container {
     x = 1,
     y = 1,
@@ -105,11 +117,15 @@ while true do
     container.payload.value = percent
 
     local percentString = string.format("%6.2f", percent * 100)
+    local deltaRF = currentRF - previousRF
+
+    local eta = getETA(deltaRF, maxRF)
 
     container.gpu.set(5, 4, "Current RF: " .. currentRF .. "(" .. percentString .. "%)")
     container.gpu.set(5, 5, "Max RF: " .. maxRF)
-    container.gpu.set(5, 6, "Delta RF/s: " .. (currentRF - previousRF))
+    container.gpu.set(5, 6, "Delta RF/s: " .. deltaRF)
     -- TODO: ETA on how many hours/mins/seconds until it's drained?
+    container.gpu.set(5, 7, "Power ETA: " .. eta)
 
     container:draw()
     previousRF = currentRF
