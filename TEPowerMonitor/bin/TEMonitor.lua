@@ -65,12 +65,9 @@ end
 -- Estimates the number of seconds before all power will be drained.
 function getETA(delta, max)
     if delta == 0 then
-        return "0 seconds"
-    elseif delta > 0 then
-        return "INF seconds"
+        return 0
     else
-        local etaSeconds = max / math.abs(delta)
-        return string.format("%.0f seconds", etaSeconds)
+        return max / delta
     end
 end
 
@@ -125,7 +122,15 @@ while true do
     container.gpu.set(5, 5, "Max RF: " .. maxRF)
     container.gpu.set(5, 6, "Delta RF/s: " .. deltaRF)
     -- TODO: ETA on how many hours/mins/seconds until it's drained?
-    container.gpu.set(5, 7, "Power ETA: " .. eta)
+    local etaString = "Power ETA "
+    if eta < 0 then
+        etaString = etaString .. "Empty: "
+    else
+        etaString = etaString .. "Full: "
+    end
+
+    etaString = etaString .. math.abs(eta) .. " seconds"
+    container.gpu.set(5, 7, etaString)
 
     container:draw()
     previousRF = currentRF
