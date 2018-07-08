@@ -67,9 +67,11 @@ while true do
     term.clear()
     container.payload.value = percent
 
-    container.gpu.set(5, 10, "Current RF: " .. currentRF .. "(" .. (percent * 100) .. "%)")
+    local percentString = string.format("%6.2f", percent * 100)
+
+    container.gpu.set(5, 10, "Current RF: " .. currentRF .. "(" .. percentString .. "%)")
     container.gpu.set(5, 11, "Max RF: " .. maxRF)
-    container.gpu.set(5, 12, "Delta RF: " .. (currentRF - previousRF))
+    container.gpu.set(5, 12, "Delta RF/s: " .. (currentRF - previousRF))
 
     container:draw()
     previousRF = currentRF
