@@ -2,6 +2,11 @@ local component = require("component")
 local event = require("event")
 local charts = require("charts")
 local term = require("term")
+local sides = require("sides")
+
+-- TODO: Make this configurable...
+local redstoneAddress = "cf2f4220"
+local redstoneSide = "right"
 
 -- Returns all Thermal Expansion energy cells of a given component.
 function getTECells(component)
@@ -37,6 +42,20 @@ function getRF(teCells)
     return currentRF, maxRF
 end
 
+function redstoneOn(redstoneComponent, side)
+    if redstoneComponent ~= nil and side ~= nil then
+        -- TODO: Make output configurable
+        redstoneComponent.setOutput(side, 100)
+    end
+end
+
+function redstoneOff(redstoneComponent, side)
+    if redstoneComponent ~= nil and side ~= nil then
+        -- TODO: Make output configurable
+        redstoneComponent.setOutput(side, 0)
+    end
+end
+
 local container = charts.Container {
     x = 1,
     y = 1,
@@ -51,6 +70,8 @@ local container = charts.Container {
     }
 }
 
+local redstone = component.get(redstoneAddress)
+
 local previousRF = 0
 while true do
     local keyDownEvent = event.pull(1, "interrupted")
@@ -64,14 +85,22 @@ while true do
     local currentRF, maxRF = getRF(teCells)
     local percent = currentRF / maxRF
 
+    -- TODO: Make thresholds configurable.
+    if percent > .9 then
+        redstoneOff(redstone, sides[redstoneSide])
+    elseif percent < .75 then
+        redstoneOn(redstone, sides[redstoneSide])
+    end
+
     term.clear()
     container.payload.value = percent
 
     local percentString = string.format("%6.2f", percent * 100)
 
-    container.gpu.set(3, 2, "Current RF: " .. currentRF .. "(" .. percentString .. "%)")
-    container.gpu.set(3, 2, "Max RF: " .. maxRF)
-    container.gpu.set(3, 2, "Delta RF/s: " .. (currentRF - previousRF))
+    container.gpu.set(5, 4, "Current RF: " .. currentRF .. "(" .. percentString .. "%)")
+    container.gpu.set(5, 5, "Max RF: " .. maxRF)
+    container.gpu.set(5, 6, "Delta RF/s: " .. (currentRF - previousRF))
+    -- TODO: ETA on how many hours/mins/seconds until it's drained?
 
     container:draw()
     previousRF = currentRF
