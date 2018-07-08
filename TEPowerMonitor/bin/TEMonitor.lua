@@ -124,18 +124,17 @@ while true do
         eta = getETA(deltaRF, maxRF - currentRF)
     end
 
+    local emptyFullString = "Full"
+
+    if eta < 0 then
+        emptyFullString = "Empty"
+    end
+
+    local etaString = string.format("Power ETA %s: %.0f", emptyFullString, math.abs(eta))
+
     container.gpu.set(5, 4, "Current RF: " .. currentRF .. "(" .. percentString .. "%)")
     container.gpu.set(5, 5, "Max RF: " .. maxRF)
     container.gpu.set(5, 6, "Delta RF/s: " .. deltaRF)
-    -- TODO: ETA on how many hours/mins/seconds until it's drained?
-    local etaString = "Power ETA "
-    if eta < 0 then
-        etaString = etaString .. "Empty: "
-    else
-        etaString = etaString .. "Full: "
-    end
-
-    etaString = etaString .. math.abs(eta) .. " seconds"
     container.gpu.set(5, 7, etaString)
 
     container:draw()
