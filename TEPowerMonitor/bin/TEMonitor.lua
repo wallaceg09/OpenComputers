@@ -1,4 +1,7 @@
 local component = require("component")
+local event = require("event")
+
+local controlKeyDown = false
 
 -- Returns all Thermal Expansion energy cells of a given component.
 function getTECells(component)
@@ -34,11 +37,26 @@ function getRF(teCells)
 	return currentRF, maxRF
 end
 
-function keydownCallback(name, keyboardAddress, character, number, playername)
-	print("Character: "..character..". Number: "..number..".")
+function keydownCallback(name, keyboardAddress, character, code, playername)
+	print("Character: "..character..". code: "..code..".")
+	if code == 29.0 then
+		controlKeyDown = true
+		elseif code == 46.0
+			if controlKeyDown then
+				os.exit()
+			end
+		end
+	end
+end
+
+function keyupCallback(name, keyboardAddress, character, code, playername)
+	if code == 29.0 then
+		controlKeyDown = false
+	end
 end
 
 event.listen("key_down", keydownCallback)
+event.listen("key_up", keyupCallback)
 
 while true do
 	local teCells = getTECells(component)
