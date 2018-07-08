@@ -63,11 +63,11 @@ function clearRedstone(redstoneProxy)
 end
 
 -- Estimates the number of seconds before all power will be drained.
-function getETA(delta, max)
+function getETA(delta, remaining)
     if delta == 0 then
         return 0
     else
-        return max / delta
+        return remaining / delta
     end
 end
 
@@ -116,7 +116,13 @@ while true do
     local percentString = string.format("%6.2f", percent * 100)
     local deltaRF = currentRF - previousRF
 
-    local eta = getETA(deltaRF, maxRF)
+    local eta = 0
+
+    if deltaRF < 0 then
+        eta = getETA(deltaRF, currentRF)
+    elseif deltaRF > 0 then
+        eta = getETA(deltaRF, maxRF - currentRF)
+    end
 
     container.gpu.set(5, 4, "Current RF: " .. currentRF .. "(" .. percentString .. "%)")
     container.gpu.set(5, 5, "Max RF: " .. maxRF)
