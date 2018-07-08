@@ -71,6 +71,18 @@ function getETA(delta, remaining)
     end
 end
 
+-- Borrowed from https://gist.github.com/jesseadams/791673
+function secondsToClock(seconds)
+    if seconds <= 0 then
+        return "00:00:00"
+    else
+        local hours = string.format("%02.f", math.floor(seconds / 3600));
+        local mins = string.format("%02.f", math.floor(seconds / 60 - (hours * 60)));
+        local secs = string.format("%02.f", math.floor(seconds - hours * 3600 - mins * 60));
+        return hours .. ":" .. mins .. ":" .. secs
+    end
+end
+
 local container = charts.Container {
     x = 1,
     y = 1,
@@ -130,7 +142,7 @@ while true do
         emptyFullString = "Empty"
     end
 
-    local etaString = string.format("Power ETA %s: %.0f", emptyFullString, math.abs(eta))
+    local etaString = string.format("Power ETA %s: %s", emptyFullString, secondsToClock(math.abs(eta)))
 
     container.gpu.set(5, 4, "Current RF: " .. currentRF .. "(" .. percentString .. "%)")
     container.gpu.set(5, 5, "Max RF: " .. maxRF)
