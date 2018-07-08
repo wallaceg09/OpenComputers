@@ -1,5 +1,6 @@
 local component = require("component")
 local event = require("event")
+local charts = require("charts")
 
 -- Returns all Thermal Expansion energy cells of a given component.
 function getTECells(component)
@@ -35,15 +36,33 @@ function getRF(teCells)
     return currentRF, maxRF
 end
 
+local container = charts.Container {
+    x = 1,
+    y = 1,
+    width = 50,
+    height = 2,
+    payload = charts.ProgressBar {
+        direction = charts.sides.LEFT,
+        value = 0,
+        colorFunc = function(_, perc)
+            return 0x20afff
+        end
+    }
+}
+
 while true do
     local keyDownEvent = event.pull(1, "interrupted")
-    
+
     if keyDownEvent ~= nil then
+        term.clear()
         break
     end
-    
+
     local teCells = getTECells(component)
     local currentRF, maxRF = getRF(teCells)
-    local percent = currentRF / maxRF
-    print("Current RF: "..currentRF.." Max RF: "..maxRF.." Percent: "..percent)
+
+    term.clear()
+    container.payload.value = currentRF / maxRF
+
+    container:draw()
 end
