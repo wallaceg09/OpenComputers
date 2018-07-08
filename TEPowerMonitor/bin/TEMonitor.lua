@@ -42,17 +42,17 @@ function getRF(teCells)
     return currentRF, maxRF
 end
 
-function redstoneOn(redstoneComponent, side)
-    if redstoneComponent ~= nil and side ~= nil then
+function redstoneOn(redstoneProxy, side)
+    if redstoneProxy ~= nil and side ~= nil then
         -- TODO: Make output configurable
-        redstoneComponent.setOutput(side, 100)
+        redstoneProxy.setOutput(side, 100)
     end
 end
 
-function redstoneOff(redstoneComponent, side)
-    if redstoneComponent ~= nil and side ~= nil then
+function redstoneOff(redstoneProxy, side)
+    if redstoneProxy ~= nil and side ~= nil then
         -- TODO: Make output configurable
-        redstoneComponent.setOutput(side, 0)
+        redstoneProxy.setOutput(side, 0)
     end
 end
 
@@ -70,7 +70,7 @@ local container = charts.Container {
     }
 }
 
-local redstone = component.get(redstoneAddress)
+local redstoneProxy = component.proxy(redstoneAddress)
 
 local previousRF = 0
 while true do
@@ -87,9 +87,9 @@ while true do
 
     -- TODO: Make thresholds configurable.
     if percent > .9 then
-        redstoneOff(redstone, sides[redstoneSide])
+        redstoneOff(redstoneProxy, sides[redstoneSide])
     elseif percent < .75 then
-        redstoneOn(redstone, sides[redstoneSide])
+        redstoneOn(redstoneProxy, sides[redstoneSide])
     end
 
     term.clear()
