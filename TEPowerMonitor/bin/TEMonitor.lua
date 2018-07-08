@@ -69,7 +69,7 @@ function getETA(delta, max)
     elseif delta > 0 then
         return "INF seconds"
     else
-        local etaSeconds = max / abs(delta)
+        local etaSeconds = max / math.abs(delta)
         return string.format("%.0f seconds", etaSeconds)
     end
 end
