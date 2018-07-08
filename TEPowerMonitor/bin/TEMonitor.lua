@@ -37,11 +37,11 @@ end
 
 while true do
     local keyDownEvent = event.pull(1, "interrupted")
-	
-	if keyDownEvent ~= nil then
-		break
-	end
-	
+    
+    if keyDownEvent ~= nil then
+        break
+    end
+    
     local teCells = getTECells(component)
     local currentRF, maxRF = getRF(teCells)
     local percent = currentRF / maxRF
