@@ -34,9 +34,16 @@ function getRF(teCells)
 	return currentRF, maxRF
 end
 
+function keydownCallback(name, keyboardAddress, character, number, playername)
+	print("Character: "..character..". Number: "..number..".")
+end
+
+event.listen("key_down", keydownCallback)
+
 while true do
 	local teCells = getTECells(component)
 	local currentRF, maxRF = getRF(teCells)
 	local percent = currentRF / maxRF
 	print("Current RF: "..currentRF.." Max RF: "..maxRF.." Percent: "..percent)
+	os.sleep(1)
 end
