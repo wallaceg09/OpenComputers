@@ -1,6 +1,7 @@
 local component = require("component")
 local event = require("event")
 local charts = require("charts")
+local term = require("term")
 
 -- Returns all Thermal Expansion energy cells of a given component.
 function getTECells(component)
@@ -42,7 +43,7 @@ local container = charts.Container {
     width = 50,
     height = 2,
     payload = charts.ProgressBar {
-        direction = charts.sides.LEFT,
+        direction = charts.sides.RIGHT,
         value = 0,
         colorFunc = function(_, perc)
             return 0x20afff
