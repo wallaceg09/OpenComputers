@@ -11,14 +11,14 @@ function getTECells(component)
     local teCellCount = 0
     for address, name in pairs(teCellsRaw) do
         teCellCount = teCellCount + 1
-        
+
         if teCellCount > 1 then
-            teCells[address] = "Thermal Expansion Power Cell".." "..countTEcell
+            teCells[address] = "Thermal Expansion Power Cell" .. " " .. countTEcell
         else
             teCells[address] = "Thermal Expansion Power Cell"
         end
     end
-    
+
     return teCells
 end
 
@@ -27,13 +27,13 @@ end
 function getRF(teCells)
     local currentRF = 0
     local maxRF = 0
-    
+
     for address, name in pairs(teCells) do
         local cell = component.proxy(address)
         currentRF = currentRF + cell.getEnergyStored()
         maxRF = maxRF + cell.getMaxEnergyStored()
     end
-    
+
     return currentRF, maxRF
 end
 
@@ -51,6 +51,7 @@ local container = charts.Container {
     }
 }
 
+local previousRF = 0
 while true do
     local keyDownEvent = event.pull(1, "interrupted")
 
@@ -61,9 +62,15 @@ while true do
 
     local teCells = getTECells(component)
     local currentRF, maxRF = getRF(teCells)
+    local percent = currentRF / maxRF
 
     term.clear()
-    container.payload.value = currentRF / maxRF
+    container.payload.value = percent
+
+    container.gpu.set(5, 10, "Current RF: " .. currentRF .. "(" .. (percent * 100) .. "%)")
+    container.gpu.set(5, 11, "Max RF: " .. maxRF)
+    container.gpu.set(5, 12, "Delta RF: " .. (currentRF - previousRF))
 
     container:draw()
+    previousRF = currentRF
 end
