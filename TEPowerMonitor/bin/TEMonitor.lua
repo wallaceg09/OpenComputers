@@ -5,8 +5,8 @@ local term = require("term")
 local sides = require("sides")
 
 -- TODO: Make this configurable...
-local redstoneAddress = "cf2f4220"
-local redstoneSide = "right"
+local redstoneAddress = "9d11b857"
+local redstoneSide = "back"
 
 -- Returns all Thermal Expansion energy cells of a given component.
 function getTECells(component)
@@ -70,7 +70,8 @@ local container = charts.Container {
     }
 }
 
-local redstoneProxy = component.proxy(redstoneAddress)
+local redstoneComponent = component.get(redstoneAddress)
+local redstoneProxy = component.proxy(redstoneComponent)
 
 local previousRF = 0
 while true do
