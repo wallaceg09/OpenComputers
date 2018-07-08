@@ -56,6 +56,12 @@ function redstoneOff(redstoneProxy, side)
     end
 end
 
+function clearRedstone(redstoneProxy)
+    for i = 0, 5 do
+        redstoneOff(redstoneProxy, i)
+    end
+end
+
 local container = charts.Container {
     x = 1,
     y = 1,
@@ -72,6 +78,8 @@ local container = charts.Container {
 
 local redstoneComponent = component.get(redstoneAddress)
 local redstoneProxy = component.proxy(redstoneComponent)
+
+redstoneOff(redstoneProxy)
 
 local previousRF = 0
 while true do
