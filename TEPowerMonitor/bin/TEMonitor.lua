@@ -18,7 +18,7 @@ function getTECells(component)
         teCellCount = teCellCount + 1
 
         if teCellCount > 1 then
-            teCells[address] = "Thermal Expansion Power Cell" .. " " .. countTEcell
+            teCells[address] = "Thermal Expansion Power Cell" .. " " .. teCellCount
         else
             teCells[address] = "Thermal Expansion Power Cell"
         end
