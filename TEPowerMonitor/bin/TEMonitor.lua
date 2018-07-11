@@ -8,6 +8,8 @@ local sides = require("sides")
 local redstoneAddress = "9d11b857"
 local redstoneSide = "back"
 
+local powerIsOn = false
+
 -- Returns all Thermal Expansion energy cells of a given component.
 function getTECells(component)
     local teCellsRaw = component.list("energy_device")
@@ -44,14 +46,14 @@ end
 
 function redstoneOn(redstoneProxy, side)
     if redstoneProxy ~= nil and side ~= nil then
-        -- TODO: Make output configurable
+        powerIsOn = true
         redstoneProxy.setOutput(side, 100)
     end
 end
 
 function redstoneOff(redstoneProxy, side)
     if redstoneProxy ~= nil and side ~= nil then
-        -- TODO: Make output configurable
+        powerIsOn = false
         redstoneProxy.setOutput(side, 0)
     end
 end
@@ -143,11 +145,16 @@ while true do
     end
 
     local etaString = string.format("Power ETA %s: %s", emptyFullString, secondsToClock(math.abs(eta)))
+    local powerIsOnString = "Off"
+    if (powerIsOn) then
+        powerIsOnString = "On"
+    end
 
     container.gpu.set(5, 4, "Current RF: " .. currentRF .. "(" .. percentString .. "%)")
     container.gpu.set(5, 5, "Max RF: " .. maxRF)
     container.gpu.set(5, 6, "Delta RF/s: " .. deltaRF)
     container.gpu.set(5, 7, etaString)
+    container.gpu.set(5, 8, "Power is " .. powerIsOnString)
 
     container:draw()
     previousRF = currentRF
