@@ -130,9 +130,9 @@ while true do
 
     -- TODO: Make thresholds configurable.
     if percent > .9 then
-        -- redstoneOff(redstoneProxy, sides[redstoneSide])
+        redstoneOff(redstoneProxy, sides[redstoneSide])
     elseif percent < .75 then
-        -- redstoneOn(redstoneProxy, sides[redstoneSide])
+        redstoneOn(redstoneProxy, sides[redstoneSide])
     end
 
     term.clear()
